@@ -1,0 +1,32 @@
+package views
+
+import (
+    "github.com/Z3DRP/Portfolio/internal/components/navbar"
+    "github.com/Z3DRP/Portfolio/internal/components/footer"
+)
+
+temple Zroot() {
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width-device-width, initial-scale=1.0">
+            <meta http-equiv="X-UA-COMPATIBLE">
+            <title>Zach Palmer portfolio 2024</title>
+            <link rel="icon" href="/assets/favicon_io/favicon-32x32.png" type="image/x-icon">
+            <script src="/assets/zhtmx/htmx.min.js"></script>
+        </head>
+        <body>
+            <header>
+                @components.Navbar()
+            </header>
+            <main id="portfolio-content">
+                // { children... }
+                @components.AboutMe()
+            </main>
+            <footer>
+                @components.Footer()
+            </footer>
+        </body>
+    </html>
+}
