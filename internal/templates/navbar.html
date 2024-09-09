@@ -1,0 +1,14 @@
+{{ define "navbar" }}
+
+<nav class="nav">
+    <h1>Zach Palmer</h1>
+    <div hx-get="/about" hx-target="#portfolio-content">About Me</div>
+    <div hx-get="/schedule" hx-target="#portfolio-content">Availability</div>
+    <div hx-get="/zypher" hx-target="#portfolio-content">Zypher Encryption Tool</div>
+    <div hx-get="/sam" hx-target="#portfolio-content">Shift Approval Manager</div>
+    // <div hx-get="https://github.com/Z3DRP?tab=repositories">My Github</div>
+    <a href="https://github.com/Z3DRP?tab=repositories">My Github</a>
+    <div hx-get="/resume" hx-target="#portfolio-content">My Resume</div>
+</nav>
+
+{{ end }}

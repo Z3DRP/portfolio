@@ -18,14 +18,14 @@ temple Zroot() {
         </head>
         <body>
             <header>
-                @components.Navbar()
+                {{ template "navbar" . }}
             </header>
             <main id="portfolio-content">
                 // { children... }
-                @components.AboutMe()
+                {{ . }}
             </main>
             <footer>
-                @components.Footer()
+                {{ template "footer" . }}
             </footer>
         </body>
     </html>
