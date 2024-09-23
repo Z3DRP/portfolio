@@ -1,7 +1,27 @@
 package components
 
-templ Schedule() {
-    <div id="schedule">
-        Mon-Friday Schedule
-    </div>
+import ("github.com/Z3DRP/portfolio/models")
+
+templ Schedule(mySchedule models.TaskSchedule) {
+    <article id="schedule-container">
+        <section id="schedule-body">
+            <table>
+                for dayIndx, days := range mySchedule {
+                    <tr>
+                        
+                    </tr>
+                }
+            </table>
+            for dayIndx, task := range myTasks {
+                <div id={ dayIndx }>
+                    <h5>{ .Weekday() }</h5>
+                    <p></p>
+                </div>
+            }
+        </section>
+        <section id="schedule-footer">
+            <button>Previous</button>
+            <button>Next</button>
+        </section>
+    </article>
 }

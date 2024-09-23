@@ -1,0 +1,10 @@
+zserver:
+   address: "0.0.0.0:8080"
+   readTimeout: 10
+   writeTimeout: 600
+   static: "public"
+
+database:
+   dbname: "zedefault"
+   dbusr: "groot"
+   dbpwd: "pwdNotYetSet"
