@@ -1,6 +1,16 @@
 package components
+import "github.com/a-h/templ"
 
-templ MyResume() {
-    <div>link to downlaod a copy of my resume</div>
-    <div>PDF version of my resume here</div>
+templ MyResume(type, source string) {
+    <section id="resume-container">
+        <article id="resume-header">
+            <button id="download" class="">
+                <a href="http://localhost:8080/public/static/assets/zrpFSResume.pdf" title="Zach Palmer Resume" download="Zach_Palmer_Resume.pdf">Download</a>
+            </button>
+        </article>
+        <article id="resume-body">
+            <iframe class={ type } src={ source } width="800" height="500">
+            </iframe>
+        </article>
+    </section>
 }

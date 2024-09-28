@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Z3DRP/portfolio/config"
+	"github.com/Z3DRP/portfolio/internal"
 	"github.com/spf13/viper"
 )
 
@@ -41,7 +42,7 @@ func NewRouter() http.Handler {
 	}
 	mux := http.NewServeMux()
 	files := http.FileServer(http.Dir(cfig.Static))
-	mux.Handle("/static/", http.StripPrefix("/static/", files))
+	mux.Handle("public/static/", http.StripPrefix("public/static/", files))
 	mux.HandleFunc("GET /", indexPage)
 	// mux.HandleFunc("/err", errPage)
 	mux.HandleFunc("GET /resume", myResume)
@@ -59,6 +60,8 @@ func NewRouter() http.Handler {
 }
 
 func indexPage(w http.ResponseWriter, r *http.Request) {
+	skillsCmp := components.SkillsSearch()
+	aboutCmp := components.AboutMe()
 
 }
 

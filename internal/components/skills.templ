@@ -1,0 +1,24 @@
+package components
+
+import "github.com/a-h/templ"
+
+templ SkillsSearch(xdata string) {
+    <div x-data="{
+        search: '',
+        skills: {{ .SkillData}},
+
+        get filteredSkills() {
+            return this.skills.filter(
+                s => s.startsWith(this.search)
+            )
+        }
+    }"> </div>
+    <input x-model="search" placeholder="Search the technologies I used..." />
+
+    <dl>
+        <template x-for="skill in filteredSkills" :key="skill">
+            <dt x-text="item.Name"></dt>
+            <dd x-text="item.Yrs"></dd>
+        </template>
+    </dl>
+}

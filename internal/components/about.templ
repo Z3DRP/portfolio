@@ -1,25 +1,26 @@
 package components
 import "github.com/a-h/templ"
 
-templ AboutMe(d Details, schdl templ.Component) {
+templ AboutMe(details models.Detail, skillSearch, schdl templ.Component) {
     <section>
         <article>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-            <h2>{ .Name }</h2>
-            <p><span>{ .Title } Devoted Father, Artist, Bonsi</span></p>
+            <h2>{ details.Name }</h2>
+            <p><span>{ details.Title }: Devoted Father, Artist, Bonsi</span></p>
+            <p>{ details.ExpOverview }</p>
             <blockquote><p>The anwser to the ultimate question of life, the universe and everything is <strong>42</strong></p></blockquote>
-            <h2>Technologies</h2>
-            </dl>
-            <dl>
-                for _, gnexp := range .Languages.GeneralXp {
-                    <dt>{ .Item }</dt>
-                    <dd>{ .Yrs }</dd>
-                }
-            </dl>
+            <h2>Skills</h2>
+            @SkillsSearch
+            // <dl>
+            //     for _, gnexp := range .Languages.GeneralXp {
+            //         <dt>{ .Item }</dt>
+            //         <dd>{ .Yrs }</dd>
+            //     }
+            // </dl>
             <h2>Experience</h2>
             <dl>
-                for _, xp := range .Exp {
-                    <dt>{ .Company } - { .Duration }</dt>
-                    <dd>{ .Description }</dd>                    
+                for _, xp := range details.Exp {
+                    <dt>{ xp.Company } - { xp.Duration }</dt>
+                    <dd>{ xp.Description }</dd>                    
                 }
             </dl>
         </article>
@@ -28,3 +29,4 @@ templ AboutMe(d Details, schdl templ.Component) {
         @schdl
     </section>
 }
+

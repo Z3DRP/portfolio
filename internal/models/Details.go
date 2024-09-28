@@ -14,20 +14,17 @@ type PrevWork struct {
 type Details struct {
 	Name        string
 	Title       string
-	Languages   map[string][]XpItem
 	Exp         []PrevWork //
 	ExpOverview string     // description of experience
 	Misc        string
 }
 
-func NewDetails(nm, ttl, xpOvw, msc string, exp []PrevWork, langs map[string][]XpItem) *Details {
+func NewDetails(nm, ttl, xpOvw, msc string, exp []PrevWork) *Details {
 	return &Details{
 		Name:        nm,
 		Title:       ttl,
 		Exp:         exp,
 		ExpOverview: xpOvw,
-		Misc:        msc,
-		Languages:   langs,
 	}
 }
 
