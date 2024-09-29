@@ -3,12 +3,17 @@ import (
     "github.com/Z3DRP/portfolio/internal/models"
     )
 
-templ Schedule(mySchedule models.TaskSchedule) {
+templ Schedule(mySchedule models.Schedule) {
     <article id="schedule-container">
         <section id="schedule-body">
             <table>
-                for dayIndx, days := range mySchedule {
-                    <tr id={ dayIndx }>
+                for dayIndx, day := range mySchedule.Availability {
+                    <tr id={ string(dayIndx) }>
+                        <th>{ day.FormattedAvailability() }</th>
+                    </tr>
+                }
+                for key, day := range mySchedule.DailySchedule {
+                    <tr>
                         
                     </tr>
                 }
