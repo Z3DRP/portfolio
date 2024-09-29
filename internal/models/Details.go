@@ -1,9 +1,6 @@
 package models
 
-type XpItem struct {
-	Item string
-	Yrs  float32
-}
+import "fmt"
 
 type PrevWork struct {
 	Company     string
@@ -16,7 +13,6 @@ type Details struct {
 	Title       string
 	Exp         []PrevWork //
 	ExpOverview string     // description of experience
-	Misc        string
 }
 
 func NewDetails(nm, ttl, xpOvw, msc string, exp []PrevWork) *Details {
@@ -28,18 +24,32 @@ func NewDetails(nm, ttl, xpOvw, msc string, exp []PrevWork) *Details {
 	}
 }
 
-func NewXpItem(item string, yrs float32) *XpItem {
-	return &XpItem{
-		Item: item,
-		Yrs:  yrs,
-	}
-}
-
 func NewPrevWork(company, descript string, duration float32) *PrevWork {
 	return &PrevWork{
 		Company:     company,
 		Description: descript,
 		Duration:    duration,
+	}
+}
+
+func TempPrevWorkFactory() []PrevWork {
+	return []PrevWork{
+		*NewPrevWork("Panera Bread", "Android Developer", 0.8),
+		*NewPrevWork("1218 Global", "Full-stack Developer", 2.0),
+	}
+}
+
+func (p PrevWork) FormattedDuration() string {
+	return fmt.Sprintf("%.2f", p.Duration)
+}
+
+func TempDetailFactory() *Details {
+	pWork := TempPrevWorkFactory()
+	return &Details{
+		Name:        "Zach Palmer",
+		Title:       "Software Engineer",
+		Exp:         pWork,
+		ExpOverview: "3 Yrs of fullstack development experience",
 	}
 }
 

@@ -47,6 +47,16 @@ func (t *Task) WeekDay() int {
 	return int(t.StartTime.Weekday())
 }
 
+func (t *Task) TaskDayKey() string {
+	return fmt.Sprintf(
+		"%v %v %v %v",
+		t.StartTime.Weekday().String(),
+		t.StartTime.Month().String(),
+		t.StartTime.Day(),
+		t.StartTime.Year(),
+	)
+}
+
 type TaskSchedule map[string]Tasklist
 
 func SortTasksByDay(tasks Tasklist, sortTimes bool) (TaskSchedule, error) {
@@ -56,8 +66,8 @@ func SortTasksByDay(tasks Tasklist, sortTimes bool) (TaskSchedule, error) {
 	}
 
 	for _, task := range tasks {
-		// map key is weekDay, MonthName day, year
-		taskDay := task.FormattedDate()
+		// map key is weekDay MonthName day year
+		taskDay := task.TaskDayKey()
 		if tsk, exists := sortedTasks[taskDay]; !exists {
 			sortedTasks[taskDay] = Tasklist{task}
 		} else {

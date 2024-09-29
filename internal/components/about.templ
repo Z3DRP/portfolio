@@ -1,7 +1,7 @@
 package components
-import "github.com/a-h/templ"
+import "github.com/Z3DRP/portfolio/internal/models"
 
-templ AboutMe(details models.Detail, skillSearch, schdl templ.Component) {
+templ AboutMe(details models.Details, skillData string, schdl templ.Component) {
     <section>
         <article>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
             <h2>{ details.Name }</h2>
@@ -9,17 +9,34 @@ templ AboutMe(details models.Detail, skillSearch, schdl templ.Component) {
             <p>{ details.ExpOverview }</p>
             <blockquote><p>The anwser to the ultimate question of life, the universe and everything is <strong>42</strong></p></blockquote>
             <h2>Skills</h2>
-            @SkillsSearch
-            // <dl>
-            //     for _, gnexp := range .Languages.GeneralXp {
-            //         <dt>{ .Item }</dt>
-            //         <dd>{ .Yrs }</dd>
-            //     }
-            // </dl>
+            <div x-data="{
+                search: '',
+                skills: {{ .skillData}},
+
+                get filteredSkills() {
+                    return this.skills.filter(
+                        s => s.startsWith(this.search)
+                    )
+                }
+            }"> </div>
+            <input x-model="search" placeholder="Search the technologies I used..." />
+            <dl>
+                <template x-for="skill in filteredSkills" :key="skill">
+                    <dt x-text="skill.Name"></dt>
+                    <dd x-text="skill.Yrs"></dd>
+                </template>
+            </dl>
+            // @SkillsSearch
+            // // <dl>
+            // //     for _, gnexp := range .Languages.GeneralXp {
+            // //         <dt>{ .Item }</dt>
+            // //         <dd>{ .Yrs }</dd>
+            // //     }
+            // // </dl>
             <h2>Experience</h2>
             <dl>
                 for _, xp := range details.Exp {
-                    <dt>{ xp.Company } - { xp.Duration }</dt>
+                    <dt>{ xp.Company } - { xp.FormattedDuration() }</dt>
                     <dd>{ xp.Description }</dd>                    
                 }
             </dl>

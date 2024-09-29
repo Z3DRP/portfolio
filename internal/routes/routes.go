@@ -1,13 +1,25 @@
 package routes
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/Z3DRP/portfolio/config"
-	"github.com/Z3DRP/portfolio/internal"
+	"github.com/Z3DRP/portfolio/internal/models"
+	zlg "github.com/Z3DRP/portfolio/internal/zlogger"
 	"github.com/spf13/viper"
+)
+
+var logfile = zlg.NewLogFile(
+	zlg.WithFilename(fmt.Sprintf("%v/routes/%v", config.LogPrefix, config.LogName)),
+)
+var logger = zlg.NewLogger(
+	logfile,
+	zlg.WithJsonFormatter(true),
+	zlg.WithLevel("trace"),
+	zlg.WithReportCaller(true),
 )
 
 func readConfig() (*config.ZServerConfig, error) {
@@ -18,17 +30,15 @@ func readConfig() (*config.ZServerConfig, error) {
 	var configs config.Configurations
 
 	if err := viper.ReadInConfig(); err != nil {
-		// TODO set this to log instead of print
-		emsg := fmt.Sprintf("Error reading config file, %s", err)
-		fmt.Print(emsg)
+		emsg := fmt.Sprintf("error reading config file, %s", err)
+		logger.MustDebug(emsg)
 		return nil, errors.New(emsg)
 	}
 
 	err := viper.Unmarshal(&configs)
 	if err != nil {
-		// TODO set this to log instead
-		emsg := fmt.Sprintf("Unable to decode into struct, %v", err)
-		fmt.Print(emsg)
+		emsg := fmt.Sprintf("unable to decode into struct, %v", err)
+		logger.MustDebug(emsg)
 		return nil, errors.New(emsg)
 	}
 
@@ -38,6 +48,7 @@ func readConfig() (*config.ZServerConfig, error) {
 func NewRouter() http.Handler {
 	cfig, err := readConfig()
 	if err != nil {
+		logger.MustDebug(fmt.Sprintf("error parsing config file, %v", err))
 		return nil
 	}
 	mux := http.NewServeMux()
@@ -60,8 +71,12 @@ func NewRouter() http.Handler {
 }
 
 func indexPage(w http.ResponseWriter, r *http.Request) {
-	skillsCmp := components.SkillsSearch()
-	aboutCmp := components.AboutMe()
+	skills := models.TempSkillFactory()
+	myDetails := models.TempDetailFactory()
+	jsonSkills, err := json.Marshal(skills)
+	if err != nil {
+		logger.MustDebug(fmt.Sprintf("error encoding skills to json, %v", err))
+	}
 
 }
 

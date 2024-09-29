@@ -1,5 +1,8 @@
 package config
 
+const LogPrefix = "var/log/"
+const LogName = "portfolio.log"
+
 type Configurations struct {
 	ZServer       ZServerConfig
 	DatabaseStore DbStoreConfig

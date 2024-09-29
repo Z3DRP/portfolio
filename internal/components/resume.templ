@@ -1,7 +1,6 @@
 package components
-import "github.com/a-h/templ"
 
-templ MyResume(type, source string) {
+templ MyResume(rtype, source string) {
     <section id="resume-container">
         <article id="resume-header">
             <button id="download" class="">
@@ -9,7 +8,7 @@ templ MyResume(type, source string) {
             </button>
         </article>
         <article id="resume-body">
-            <iframe class={ type } src={ source } width="800" height="500">
+            <iframe class={ rtype } src={ source } width="800" height="500">
             </iframe>
         </article>
     </section>

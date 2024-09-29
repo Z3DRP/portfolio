@@ -1,7 +1,6 @@
 package components
 import (
-    "github.com/a-h/templ"
-    "github.com/Z3DRP/portfolio/models"
+    "github.com/Z3DRP/portfolio/internal/models"
     )
 
 templ Schedule(mySchedule models.TaskSchedule) {
@@ -9,14 +8,14 @@ templ Schedule(mySchedule models.TaskSchedule) {
         <section id="schedule-body">
             <table>
                 for dayIndx, days := range mySchedule {
-                    <tr>
+                    <tr id={ dayIndx }>
                         
                     </tr>
                 }
             </table>
             for dayIndx, task := range myTasks {
                 <div id={ dayIndx }>
-                    <h5>{ .Weekday() }</h5>
+                    <h5>{ task.Weekday() }</h5>
                     <p></p>
                 </div>
             }
