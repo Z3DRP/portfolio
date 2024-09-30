@@ -1,33 +1,83 @@
 package components
 import (
+    "time"
+    "encoding/json"
+    "errors"
+    "sort"
     "github.com/Z3DRP/portfolio/internal/models"
     )
 
-templ Schedule(mySchedule models.Schedule) {
+templ Schedule(period models.Period, mySchedule models.Schedule) {
     <article id="schedule-container">
         <section id="schedule-body">
             <table>
-                for dayIndx, day := range mySchedule.Availability {
-                    <tr id={ string(dayIndx) }>
-                        <th>{ day.FormattedAvailability() }</th>
-                    </tr>
-                }
-                for key, day := range mySchedule.DailySchedule {
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    for dayIndx, day := range period.GetDaysInPeriod() {
+                        <th id={ string(dayIndx) }>{ period.FormattedDate(day) }</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                for _, key := range sortedTimeKeys(mySchedule) {
                     <tr>
-                        
+                        <td>{ mySchedule.Get12HrTime(key) }</td>
+                        for _, task := range mySchedule.HourlySchedule[key] {
+                            if !mySchedule.AvailabilityRange[key] {
+                                <td>
+                                    <article>
+                                        <div><span>Time Not Avaiable</span></div>
+                                    </article>
+                                </td>
+                            } else {                            
+                                <td>
+                                    <article>
+                                        <div>
+                                            <span>{ task.FormattedTime() }</span>
+                                        </div>
+                                        <div>
+                                            <span>{ task.Detail }</span>
+                                        </div>
+                                    </article>
+                                </td>
+                            }
+                        }
                     </tr>
                 }
+            </tbody>
             </table>
-            for dayIndx, task := range myTasks {
-                <div id={ dayIndx }>
-                    <h5>{ task.Weekday() }</h5>
-                    <p></p>
-                </div>
-            }
         </section>
         <section id="schedule-footer">
-            <button>Previous</button>
-            <button>Next</button>
+            <button hx-get="localhost://schedule" hx-vals={ stringifyPeriodReq(period, "prev") } disabled?={period.StartDate.Equal(time.Now())}>Previous</button>
+            <button hx-get="localhost://schedule" hx-vals={ stringifyPeriodReq(period, "next")}>Next</button>
         </section>
     </article>
+}
+
+func stringifyPeriodReq(p models.Period, dir string) (string, error) {
+    var nwStart, nwEnd time.Time
+    switch dir {
+        case "prev":
+        nwStart, nwEnd = p.Prev()
+        default:
+        nwStart, nwEnd = p.Next()
+    }
+    nwPeriod := models.NewPeriod(p.Length, nwStart, nwEnd)
+    jsonData, err := json.Marshal(nwPeriod)
+	if err != nil {
+		return "", errors.New("could not convert data into json")
+	}
+	return string(jsonData), nil
+}
+
+func sortedTimeKeys(s models.Schedule) []int {
+    keys := make([]int, 0, len(s.HourlySchedule))
+    for key := range s.HourlySchedule {
+        keys = append(keys, key)
+    }
+    sort.Slice(keys, func(cindx, nindx int) bool {
+        return keys[cindx] < keys[nindx]
+    })
+    return keys
 }

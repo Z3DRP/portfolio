@@ -42,6 +42,10 @@ func (t *Task) FormattedDate() string {
 	return fmt.Sprintf("%v, %v %v, %v", t.WeekDayName(), t.MonthName(), t.Day(), t.Yr())
 }
 
+func (t *Task) FormattedTime() string {
+	return fmt.Sprintf("%v:%v - %v:%v", t.StartTime.Hour(), t.StartTime.Minute(), t.EndTime.Hour(), t.EndTime.Minute())
+}
+
 func (t *Task) WeekDay() int {
 	return int(t.StartTime.Weekday())
 }
@@ -51,6 +55,10 @@ func (t *Task) TaskDayKey() string {
 		"%v",
 		t.StartTime.Weekday(),
 	)
+}
+
+func (t *Task) TaskHrKey() int {
+	return t.StartTime.Hour()
 }
 
 type TaskSchedule map[string]Tasklist

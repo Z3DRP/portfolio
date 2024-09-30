@@ -11,6 +11,32 @@ import (
 const LOWER_TIME_BOUND = 8
 const UPPER_TIME_BOUND = 17
 
+type Availabler interface {
+	FormattedTime() string
+}
+
+type AvailableDay struct {
+	Day      int
+	FromHour int
+	FromMin  int
+	ToHour   int
+	ToMinute int
+}
+
+func (a *AvailableDay) FormattedTime() string {
+	return fmt.Sprintf("%v:%v - %v:%v", a.FromHour, a.FromMin, a.ToHour, a.ToMinute)
+}
+
+func NewAvailableDay(day, frmHr, frmMin, toHr, toMin int) Availabler {
+	return &AvailableDay{
+		Day:      day,
+		FromHour: frmHr,
+		FromMin:  frmMin,
+		ToHour:   toHr,
+		ToMinute: toMin,
+	}
+}
+
 type DailyAvailability struct {
 	Day               int
 	AvailableFrom     time.Time
@@ -18,11 +44,19 @@ type DailyAvailability struct {
 	AvailabilityRange *map[string]bool
 }
 
+func (d DailyAvailability) FormattedTime() string {
+	return fmt.Sprintf("%v:%v - %v:%v", d.AvailableFrom.Hour(), d.AvailableFrom.Minute(), d.AvailableTo.Hour(), d.AvailableTo.Minute())
+}
+
 func (d DailyAvailability) DayKey() string {
 	return fmt.Sprintf(
 		"%v",
 		d.AvailableFrom.Weekday().String(),
 	)
+}
+
+func (d DailyAvailability) HourKey() int {
+	return d.AvailableFrom.Hour()
 }
 
 func (d DailyAvailability) StartDay() string {
@@ -63,6 +97,7 @@ func initAvailRange(from time.Time, to time.Time) (*map[string]bool, error) {
 		return nil, InvalidTimes
 	}
 
+	// TODO when making availabiltyRange for daily loop over dailyAvaialbilities here to getAll
 	tmRange := make(map[string]bool, UPPER_TIME_BOUND-LOWER_TIME_BOUND)
 	for i := LOWER_TIME_BOUND; i <= UPPER_TIME_BOUND; i++ {
 		if _, exists := tmRange[string(i)]; !exists {
@@ -70,7 +105,7 @@ func initAvailRange(from time.Time, to time.Time) (*map[string]bool, error) {
 		}
 	}
 
-	for i := to.Hour(); i <= from.Hour(); i++ {
+	for i := from.Hour(); i <= to.Hour(); i++ {
 		tmRange[string(i)] = true
 	}
 
@@ -78,8 +113,30 @@ func initAvailRange(from time.Time, to time.Time) (*map[string]bool, error) {
 }
 
 type Schedule struct {
-	Availability  []DailyAvailability
-	DailySchedule map[string]Tasklist
+	Availability      []DailyAvailability
+	DailySchedule     map[string]Tasklist
+	HourlySchedule    map[int]Tasklist
+	AvailabilityRange map[int]bool
+}
+
+func (s *Schedule) Get12HrTime(key int) string {
+	hr := key % 12
+	if hr == 0 {
+		hr = 12
+	}
+	antemeridiem := "AM"
+	if hr >= 12 {
+		antemeridiem = "PM"
+	}
+	return fmt.Sprintf("%02d %s", hr, antemeridiem)
+}
+
+func SortTaskByHour(s Schedule, tasks Tasklist) (map[int]Tasklist, error) {
+	sortedTasks := make(map[int]Tasklist, UPPER_TIME_BOUND-LOWER_TIME_BOUND)
+	if len(tasks) == 0 {
+		return nil, errors.New("empty task list")
+	}
+
 }
 
 func SortTasksByDay(s Schedule, tasks Tasklist) (map[string]Tasklist, error) {
